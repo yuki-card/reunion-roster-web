@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 600px;
+}
+
+h1 {
+    text-align: center;
+    color: #4a4a4a;
+    margin-bottom: 20px;
+}
+
+.input-section,
+.search-section {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.input-section input {
+    flex-grow: 1;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    margin-right: 10px;
+}
+
+.input-section input:nth-last-of-type(2) {
+    margin-right: 10px;
+}
+
+.input-section input:last-of-type {
+    margin-right: 0;
+}
+
+.input-section button {
+    padding: 12px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.input-section button:hover {
+    background-color: #0056b3;
+}
+
+#roster-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#roster-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+#roster-list li:last-child {
+    border-bottom: none;
+}
+
+.names {
+    flex-grow: 1;
+}
+
+.names span {
+    display: block;
+    font-size: 16px;
+}
+
+.names .line-name {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.names .real-name {
+    color: #555;
+    font-size: 14px;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: #ff4d4d;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
