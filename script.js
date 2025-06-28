@@ -6,10 +6,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     const rosterList = document.getElementById('roster-list');
 
-    let participants = JSON.parse(localStorage.getItem('reunionRoster')) || [];
+    // =====================================================================
+    // Firebaseの設定 (YOUR_... の部分をあなたの情報に置き換えてください)
+    // =====================================================================
+   const firebaseConfig = {
+  apiKey: "AIzaSyAobMzYVkR88iiJoaLDO3517umgCIgyf8I",
+  authDomain: "reunion-roster-app.firebaseapp.com",
+  databaseURL: "https://reunion-roster-app-default-rtdb.firebaseio.com",
+  projectId: "reunion-roster-app",
+  storageBucket: "reunion-roster-app.firebasestorage.app",
+  messagingSenderId: "14899019698",
+  appId: "1:14899019698:web:e52939b6ade9f944c76eab",
+    };
 
-    const saveRoster = () => {
-        localStorage.setItem('reunionRoster', JSON.stringify(participants));
+    // Firebaseを初期化
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const rosterRef = database.ref('reunionRoster'); // 'reunionRoster'というパスにデータを保存
+    // =====================================================================
+
+    let participants = []; // 表示・編集用のデータ
+
+    // Firebaseからデータをロード
+    const loadParticipantsFromFirebase = () => {
+        rosterRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                // Firebaseから取得したオブジェクトを配列に変換
+                participants = Object.values(data);
+            } else {
+                participants = [];
+            }
+            renderRoster(searchInput.value);
+        });
+    };
+
+    // Firebaseにデータを保存
+    const saveParticipantsToFirebase = () => {
+        // 配列をFirebaseに保存するためにオブジェクト形式に変換
+        // 各要素にユニークなキー（ID）を持たせる
+        const dataToSave = {};
+        participants.forEach(p => {
+            dataToSave[p.id] = p;
+        });
+        rosterRef.set(dataToSave);
     };
 
     const renderRoster = (filterText = '') => {
@@ -74,24 +114,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const newParticipant = {
-            id: Date.now(),
+            id: Date.now(), // ユニークなIDを生成
             lineName: lineName,
             realName: realName,
             yomigana: yomigana
         };
 
         participants.push(newParticipant);
-        saveRoster();
+        saveParticipantsToFirebase(); // Firebaseに保存
         lineNameInput.value = '';
         realNameInput.value = '';
         yomiganaInput.value = '';
-        renderRoster(searchInput.value);
+        // renderRosterはFirebaseからのデータ更新で自動的に呼ばれる
     };
 
     const deleteParticipant = (id) => {
         participants = participants.filter(p => p.id !== id);
-        saveRoster();
-        renderRoster(searchInput.value);
+        saveParticipantsToFirebase(); // Firebaseに保存
+        // renderRosterはFirebaseからのデータ更新で自動的に呼ばれる
     };
 
     addButton.addEventListener('click', addParticipant);
@@ -109,5 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderRoster(e.target.value);
     });
 
-    renderRoster();
+    // 初期ロードとレンダリング
+    loadParticipantsFromFirebase(); // Firebaseからデータをロード
 });
